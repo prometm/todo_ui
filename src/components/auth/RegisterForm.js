@@ -50,7 +50,7 @@ class RegisterForm extends React.Component {
       'password': this.state.password,
       'password_confirmation': this.state.password_confirmation
     },
-    
+    { withCredentials: true }
     ).then(resp => {
       let accessToken = resp.headers["access-token"]
       let client = resp.headers["client"]
