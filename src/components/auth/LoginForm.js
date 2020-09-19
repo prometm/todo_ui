@@ -51,7 +51,7 @@ class LoginForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    axios.post(this.props.hostName + '/auth/sign_in', {
+    axios.post(this.props.hostName + 'auth/sign_in', {
       'email': this.state.email,
       'password': this.state.password,
       'crossDomain': true
