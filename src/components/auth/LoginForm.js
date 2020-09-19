@@ -53,7 +53,8 @@ class LoginForm extends React.Component {
     e.preventDefault()
     axios.post(this.props.hostName + '/auth/sign_in', {
       'email': this.state.email,
-      'password': this.state.password
+      'password': this.state.password,
+      'crossDomain': true
     },
     { withCredentials: true }
     ).then(resp => {
