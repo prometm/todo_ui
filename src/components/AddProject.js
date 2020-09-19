@@ -26,7 +26,7 @@ class AddProject extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    axios.post('http://localhost:3001/api/v1/projects',
+    axios.post(this.props.hostName + 'api/v1/projects',
       {data: {
           attributes: {
             name: this.state.projectName

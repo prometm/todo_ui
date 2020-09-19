@@ -144,7 +144,7 @@ class Projects extends React.Component {
         <div className="addContainer">
             <div id="add_button">
                 <p><input onClick={this.showTodoForm} style={styles.addNewProject} type="submit" value="+ Add TODO list" id="add_project"/></p>
-                <AddProject addNewProject={this.addNewProject} isHidden={this.state.projectFormHiddem} />
+                <AddProject addNewProject={this.addNewProject} hostName={this.state.hostName} isHidden={this.state.projectFormHiddem} />
             </div>
         </div>
         <input id="logout" onClick={this.handleLogout} type="submit" value="Logout" />
