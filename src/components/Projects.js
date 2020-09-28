@@ -7,6 +7,8 @@ import AddProject from './AddProject.js'
 import Project from './Project.js'
 
 
+
+
 const styles = {
   mainTasksContainer: {
     width: '60%',
@@ -133,6 +135,7 @@ class Projects extends React.Component {
   render() {
     return(
       <Fragment>
+        
         <div id="mainTasksContainer" style={styles.mainTasksContainer}>
 
           {this.state.projects.map(item => (

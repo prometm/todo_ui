@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import axios from 'axios'
 import TaskNameField from './TaskNameField.js'
 
+
 import '../css/fontawesome/all.min.css'
 
 const styles = {
@@ -50,7 +51,7 @@ class Task extends React.Component {
     this.state = {
       taskName: this.props.task.name,
       readOnlyName: true,
-      taskDone: this.props.task.done,
+      taskDone: this.props.task.done
     }
 
     this.handleTaskDelete = this.handleTaskDelete.bind(this)
@@ -137,7 +138,6 @@ class Task extends React.Component {
   }
 
   changeTaskPosition(newPosition) {
-    console.log('=> ', newPosition)
     axios.patch(this.props.hostName + 'api/v1/projects/' + this.props.projectId + '/tasks/' + this.props.task.id + '/position', 
     {
       data: {
@@ -181,6 +181,7 @@ class Task extends React.Component {
     var rowStyle = this.state.taskDone ? 'rowDone' : 'row'
     return(
       <Fragment>
+        
         <tr className={rowStyle}>
           <th style={styles.t, styles.t1}>
             <input type="checkbox" onClick={this.taskChecked} className="checkbox" defaultChecked={this.props.task.done} name={this.props.task.name} />
@@ -196,6 +197,12 @@ class Task extends React.Component {
             </div>
             <div style={styles.navigation}>
               <i className="fas fa-pencil-alt" onClick={this.handleEditName}></i>
+            </div>
+
+            <div style={styles.navigation}>
+              <i style={ this.props.task.deadline ? {color: '#43d45f'} : {color: '#000000'}}
+                className="fas fa-calendar-alt"
+                onClick={() => this.props.handleShowCalendar(this.props.task.id)}></i>
             </div>
             
             <div style={styles.navigation} onClick={this.handleTaskDelete}>

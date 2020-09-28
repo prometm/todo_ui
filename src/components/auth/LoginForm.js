@@ -40,7 +40,10 @@ class LoginForm extends React.Component {
     super(props)
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      emailError: '',
+      passwordError: '',
+      invalidAuthData: ''
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -49,28 +52,55 @@ class LoginForm extends React.Component {
 
   // https://www.youtube.com/watch?v=AWLgf_xfd_w&list=PLgYiyoyNPrv_yNp5Pzsx0A3gQ8-tfg66j&index=6
 
+  validate = () => {
+    let emailError = ''
+    let passwordError = ''
+  
+    if(!this.state.email.includes('@')) {  
+      emailError = 'Invalid email'
+    }
+    if(this.state.password.length < 8) {
+      passwordError = 'The password cannot be less than 8 characters'
+    }
+    // /\A[^@]+@([^@\.]+\.)+[^@\.]+\z/
+    if (emailError || passwordError) {
+      this.setState({ emailError, passwordError })
+      return false
+    } else {
+      this.setState({
+        emailError: '',
+        passwordError: ''
+      })
+    }
+    return true
+  }
+
   handleSubmit(e) {
     e.preventDefault()
-    axios.post(this.props.hostName + 'auth/sign_in', {
-      'email': this.state.email,
-      'password': this.state.password,
-    },
-    { withCredentials: true }
-    ).then(resp => {
-      let accessToken = resp.headers["access-token"]
-      let client = resp.headers["client"]
-      let uid = resp.headers["uid"]
-      
-      localStorage['accessToken'] = accessToken
-      localStorage['client'] = client
-      localStorage['uid'] = uid
+    const isValid = this.validate()
 
-      localStorage['isLogged'] = 'IS_LOGGED'
-      this.props.history.push('/projects')
+    if (isValid) {
+      axios.post(this.props.hostName + 'auth/sign_in', {
+        'email': this.state.email,
+        'password': this.state.password,
+      },
+      { withCredentials: true }
+      ).then(resp => {
+        let accessToken = resp.headers["access-token"]
+        let client = resp.headers["client"]
+        let uid = resp.headers["uid"]
+        
+        localStorage['accessToken'] = accessToken
+        localStorage['client'] = client
+        localStorage['uid'] = uid
 
-    }).catch(error => {
-      console.log('Request error ', error)
-    })
+        localStorage['isLogged'] = 'IS_LOGGED'
+        this.props.history.push('/projects')
+
+      }).catch(error => {
+        this.setState({passwordError: 'Invalid email or/and password'})
+      })
+    }
   }
 
   handleChange(e) {
@@ -84,9 +114,12 @@ class LoginForm extends React.Component {
       <div style={styles.loginContainer}>
         <form onSubmit={this.handleSubmit}>
           <input style={styles.inputData} type="text" name="email" placeholder="Email" value={this.state.email} onChange={this.handleChange} required />
-          <input style={styles.inputData} type="text" name="password" placeholder="Password" value={this.state.password} onChange={this.handleChange} required />
-          <button>Войти</button>
-          <Link to="/register">Регистрация</Link>
+          <div style={{color: 'red'}}>{this.state.emailError}</div>
+          <input style={styles.inputData} type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.handleChange} required />
+          <div style={{color: 'red'}}>{this.state.passwordError}</div>
+          <div>{this.state.invalidAuthData}</div>
+          <button>Sign In</button>
+          <Link to="/register">Sign Up</Link>
           
         </form>
       </div>

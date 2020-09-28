@@ -1,13 +1,17 @@
 import React from 'react'
 
-class taskNameField extends React.Component {
-    
-    render() {
-        // var style = this.props.readOnly ? "bg: '#ff0000'" : ""
-        return(
-            <input style={{bg: '#ff0000'}} onChange={this.props.changeTaskName} className={this.props.className} type="text" value={this.props.name} readOnly={this.props.readOnly} />
-        )
-    }
+const taskNameField = (props) => {
+    var style = props.readOnly ? {} : {color: '#ff0000'}
+    return(
+        <input
+        	style={style}
+        	onChange={props.changeTaskName}
+        	className={props.className}
+        	type="text"
+        	value={props.name}
+        	readOnly={props.readOnly}
+    	/>
+    )
 }
 
 export default taskNameField

@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import Task from './Task.js'
+import Modal from './Modal.js'
 
 import '../css/fontawesome/all.min.css'
 
@@ -19,10 +20,11 @@ const styles = {
   projectName: {
     background: 'linear-gradient(#4a78b5, #426daa)',
     color: '#ffffff',
-    width: '87%',
+    width: '85%',
     float: 'left',
     fontSize: 20,
     marginTop: 7,
+    marginLeft: 10,
     border: 'none'
   },
   progectAction: {
@@ -75,7 +77,10 @@ const styles = {
     color: '#ffffff',
     fontSize: '100%'
   },
-  tbl: {}
+  tbl: {},
+  projectActive: {
+    color: '#fc3c1a',
+  },
 }
 
 class Project extends React.Component {
@@ -85,7 +90,9 @@ class Project extends React.Component {
       project: [],
       readOnlyProject: true,
       projectName: this.props.project.name,
-      newTaskName: ''
+      newTaskName: '',
+      modalIsVisible: false,
+      taskDeadline: null
     }
 
     this.handleDelete = this.handleDelete.bind(this)
@@ -93,7 +100,8 @@ class Project extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.updatePage = this.updatePage.bind(this)
     this.addTask = this.addTask.bind(this)
-
+    this.handleShowCalendar = this.handleShowCalendar.bind(this)
+    this.taskDeadline = this.taskDeadline.bind(this)
   }
 
   handleDelete(e) {
@@ -168,13 +176,54 @@ class Project extends React.Component {
     })
   }
 
+  handleShowCalendar(taskId) {
+    this.setState({
+      modalIsVisible: !this.state.modalIsVisible,
+      taskDeadline: taskId
+    })
+  }
+
+  taskDeadline(date) {
+    axios.patch(this.props.hostName + 'api/v1/projects/' + this.props.project.id + '/tasks/' + this.state.taskDeadline + '/deadline',
+    {
+      data: {
+        attributes: {
+          deadline: date
+        }
+      }
+    },
+    {
+      headers: {
+        'access-token': localStorage['accessToken'],
+        client: localStorage['client'],
+        uid: localStorage['uid']
+      }
+    },
+    { withCredentials: true }
+    ).then(resp => {
+      this.setState({
+        taskDeadline: null
+      })
+      this.handleShowCalendar()
+      this.updatePage()
+    }).catch(error => {
+      console.log('Request error ', error)
+    })
+  }
+
   render() {
+    let projectActive = this.state.readOnlyProject ? {} : styles.projectActive
+    let projectName = {...styles.projectName, ...projectActive}
     return(
         
       <div style={styles.contTbl} id="project-{{project.id}}">
-        <div style={styles.up} name={'a'}>
-          <input style={styles.projectName} type="text" name="projectName" onChange={this.handleChange} value={this.state.projectName} readOnly={this.state.readOnlyProject} />
-          <div style={styles.progectAction} name={'b'}>
+        <Modal
+          modalIsVisible={this.state.modalIsVisible}
+          hideModal={this.handleShowCalendar}
+          taskDeadline={this.taskDeadline} />
+        <div style={styles.up} >
+          <input style={projectName} type="text" name="projectName" onChange={this.handleChange} value={this.state.projectName} readOnly={this.state.readOnlyProject} />
+          <div style={styles.progectAction} >
             <div className="navigation">
               <i className="fas fa-pencil-alt" onClick={this.handelNameEdit}></i>
             </div>  
@@ -199,7 +248,14 @@ class Project extends React.Component {
           <table id="table{this.props.project.id}">
             <tbody>
               {this.props.tasks.map(item => (
-                <Task task={item} key={'task-' + item.id} updatePage={this.updatePage} hostName={this.props.hostName} projectId={this.props.project.id} handleDelete={this.deleteTask} />
+                <Task
+                  task={item}
+                  key={'task-' + item.id}
+                  updatePage={this.updatePage}
+                  hostName={this.props.hostName}
+                  projectId={this.props.project.id}
+                  handleDelete={this.deleteTask}
+                  handleShowCalendar={this.handleShowCalendar} />
               ))}
             </tbody>
           </table>
