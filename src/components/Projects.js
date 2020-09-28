@@ -1,12 +1,7 @@
 import React, { Fragment } from 'react'
-// import ReactDOM from 'react-dom'
-// import PropTypes from 'prop-types'
 import axios from 'axios'
-
 import AddProject from './AddProject.js'
 import Project from './Project.js'
-
-
 
 
 const styles = {
@@ -29,8 +24,6 @@ const styles = {
 class Projects extends React.Component {
   constructor(props) {
     super(props)
-
-    // console.log('-> ', this.props)
 
     this.state = {
       projects: [],
@@ -61,11 +54,10 @@ class Projects extends React.Component {
     },
     { withCredentials: true }
     ).then(resp => {
-      this.setState({
-        projects: resp.data,
-      })
-      // console.log(this.state.projects)
-    }
+        this.setState({
+          projects: resp.data,
+        })
+      }
     ).catch(error => {
       console.log('Request error ', error)
     })
@@ -107,7 +99,6 @@ class Projects extends React.Component {
       projects: p,
       projectFormHiddem: !this.state.projectFormHiddem
     })
-    // console.log(this.state.projects)
   }
 
   deleteProject(projectId) {
@@ -121,7 +112,6 @@ class Projects extends React.Component {
     { withCredentials: true }
     ).then(resp => {
       this.getProjects()
-      // console.log(resp)
     }
     ).catch(error => {
       console.log('Request error ', error)
@@ -139,15 +129,22 @@ class Projects extends React.Component {
         <div id="mainTasksContainer" style={styles.mainTasksContainer}>
 
           {this.state.projects.map(item => (
-            <Project project={item} updatePage={this.updatePage} tasks={item.tasks} hostName={this.state.hostName} key={'project-' + item.id} handleDelete={this.deleteProject} />
+            <Project
+              project={item}
+              updatePage={this.updatePage}
+              tasks={item.tasks}
+              hostName={this.state.hostName}
+              key={'project-' + item.id} handleDelete={this.deleteProject} />
           ))}
 
         </div>
-        
         <div className="addContainer">
             <div id="add_button">
                 <p><input onClick={this.showTodoForm} style={styles.addNewProject} type="submit" value="+ Add TODO list" id="add_project"/></p>
-                <AddProject addNewProject={this.addNewProject} hostName={this.state.hostName} isHidden={this.state.projectFormHiddem} />
+                <AddProject
+                  addNewProject={this.addNewProject}
+                  hostName={this.state.hostName}
+                  isHidden={this.state.projectFormHiddem} />
             </div>
         </div>
         <input id="logout" onClick={this.handleLogout} type="submit" value="Logout" />

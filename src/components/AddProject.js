@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import axios from 'axios'
+import PropTypes from 'prop-types'
 
 const styles = {
   addProjectContainer: {
@@ -63,6 +64,12 @@ class AddProject extends React.Component {
       </Fragment>
     )
   }
+}
+
+AddProject.propTypes = {
+  addNewProject: PropTypes.func.isRequired,
+  hostName: PropTypes.string.isRequired,
+  isHidden: PropTypes.bool.isRequired,
 }
 
 export default AddProject

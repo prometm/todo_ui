@@ -17,7 +17,7 @@ export default class Calendar extends React.Component {
     state = {
         date: this.props.date,
         currentDate: new Date(),
-        selectedDate: null
+        selectedDate: this.props.deadline ? new Date(this.props.deadline) : null
     };
 
     get year() {

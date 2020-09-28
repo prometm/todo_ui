@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import PropTypes from 'prop-types'
 import Task from './Task.js'
 import Modal from './Modal.js'
 
@@ -92,7 +93,8 @@ class Project extends React.Component {
       projectName: this.props.project.name,
       newTaskName: '',
       modalIsVisible: false,
-      taskDeadline: null
+      taskDeadlineId: null,
+      deadline: null
     }
 
     this.handleDelete = this.handleDelete.bind(this)
@@ -101,11 +103,10 @@ class Project extends React.Component {
     this.updatePage = this.updatePage.bind(this)
     this.addTask = this.addTask.bind(this)
     this.handleShowCalendar = this.handleShowCalendar.bind(this)
-    this.taskDeadline = this.taskDeadline.bind(this)
+    this.taskDeadlineId = this.taskDeadlineId.bind(this)
   }
 
   handleDelete(e) {
-    // console.log('del')
     this.props.handleDelete(this.props.project.id)
   }
 
@@ -113,7 +114,6 @@ class Project extends React.Component {
     this.setState({
       readOnlyProject: !this.state.readOnlyProject
     })
-    // console.log(this.state.readOnlyProject)
     if (!this.state.readOnlyProject) {
       axios.patch(this.props.hostName + 'api/v1/projects/' + this.props.project.id,
       {
@@ -132,7 +132,7 @@ class Project extends React.Component {
       },
       { withCredentials: true }
       ).then(resp => {
-        // console.log(resp)
+        
       }).catch(error => {
         console.log('Request error ', error)
       })
@@ -176,15 +176,16 @@ class Project extends React.Component {
     })
   }
 
-  handleShowCalendar(taskId) {
+  handleShowCalendar(taskId, deadline) {
     this.setState({
       modalIsVisible: !this.state.modalIsVisible,
-      taskDeadline: taskId
+      taskDeadlineId: taskId,
+      deadline: deadline
     })
   }
 
-  taskDeadline(date) {
-    axios.patch(this.props.hostName + 'api/v1/projects/' + this.props.project.id + '/tasks/' + this.state.taskDeadline + '/deadline',
+  taskDeadlineId(date) {
+    axios.patch(this.props.hostName + 'api/v1/projects/' + this.props.project.id + '/tasks/' + this.state.taskDeadlineId + '/deadline',
     {
       data: {
         attributes: {
@@ -202,9 +203,9 @@ class Project extends React.Component {
     { withCredentials: true }
     ).then(resp => {
       this.setState({
-        taskDeadline: null
+        taskDeadlineId: null
       })
-      this.handleShowCalendar()
+      this.handleShowCalendar(null, null)
       this.updatePage()
     }).catch(error => {
       console.log('Request error ', error)
@@ -217,10 +218,13 @@ class Project extends React.Component {
     return(
         
       <div style={styles.contTbl} id="project-{{project.id}}">
+
         <Modal
           modalIsVisible={this.state.modalIsVisible}
           hideModal={this.handleShowCalendar}
-          taskDeadline={this.taskDeadline} />
+          changeTaskDeadline={this.taskDeadlineId}
+          deadline={this.state.deadline} />
+
         <div style={styles.up} >
           <input style={projectName} type="text" name="projectName" onChange={this.handleChange} value={this.state.projectName} readOnly={this.state.readOnlyProject} />
           <div style={styles.progectAction} >
@@ -254,7 +258,6 @@ class Project extends React.Component {
                   updatePage={this.updatePage}
                   hostName={this.props.hostName}
                   projectId={this.props.project.id}
-                  handleDelete={this.deleteTask}
                   handleShowCalendar={this.handleShowCalendar} />
               ))}
             </tbody>
@@ -264,6 +267,13 @@ class Project extends React.Component {
         
     )
   }
+}
+
+Project.propTypes = {
+  project: PropTypes.object.isRequired,
+  updatePage: PropTypes.func.isRequired,
+  tasks: PropTypes.array.isRequired,
+  hostName: PropTypes.string.isRequired,
 }
 
 export default Project

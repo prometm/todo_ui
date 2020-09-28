@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-
+import PropTypes from 'prop-types'
 import Calendar from './calendar/index.js'
 
 const styles = {
@@ -26,9 +26,7 @@ const styles = {
 }
 
 
-const Modal = ({ modalIsVisible, hideModal, taskDeadline }) => {
-  // const [isVisible, setVisible] = React.useState(modalIsVisible)
-
+const Modal = ({ modalIsVisible, hideModal, changeTaskDeadline, deadline }) => {
   const changeVisibility = () => {
     hideModal()
   }
@@ -40,7 +38,7 @@ const Modal = ({ modalIsVisible, hideModal, taskDeadline }) => {
     } else {
       dateString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
     }
-    taskDeadline(dateString)
+    changeTaskDeadline(dateString)
   } 
 
   return(
@@ -48,7 +46,7 @@ const Modal = ({ modalIsVisible, hideModal, taskDeadline }) => {
     { modalIsVisible &&
       <div style={styles.modal}>
           <div style={styles.calrndarContainer}>
-              <Calendar setDate={setTaskDeadline} />
+              <Calendar setDate={setTaskDeadline} deadline={deadline} />
               <input type='button' onClick={() => setTaskDeadline('null')} value='Delete Deadline' />
               <input type='button' onClick={changeVisibility} value='Cancel' />
           </div>
@@ -56,6 +54,13 @@ const Modal = ({ modalIsVisible, hideModal, taskDeadline }) => {
     }
     </Fragment>
   )
+}
+
+Modal.propTypes = {
+  modalIsVisible: PropTypes.bool.isRequired,
+  hideModal: PropTypes.func.isRequired,
+  changeTaskDeadline: PropTypes.func.isRequired,
+  deadline: PropTypes.string,
 }
 
 export default Modal;

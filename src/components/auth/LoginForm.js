@@ -1,12 +1,7 @@
 import React from 'react'
-// import ReactDOM from 'react-dom'
 import { Link } from 'react-router-dom'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 
-// import "core-js/stable";
-// import "regenerator-runtime/runtime";
-
-// import "@babel/polyfill";
 
 const axios = require('axios')
 
@@ -50,8 +45,6 @@ class LoginForm extends React.Component {
     this.handleChange = this.handleChange.bind(this)
   }
 
-  // https://www.youtube.com/watch?v=AWLgf_xfd_w&list=PLgYiyoyNPrv_yNp5Pzsx0A3gQ8-tfg66j&index=6
-
   validate = () => {
     let emailError = ''
     let passwordError = ''
@@ -62,7 +55,7 @@ class LoginForm extends React.Component {
     if(this.state.password.length < 8) {
       passwordError = 'The password cannot be less than 8 characters'
     }
-    // /\A[^@]+@([^@\.]+\.)+[^@\.]+\z/
+    
     if (emailError || passwordError) {
       this.setState({ emailError, passwordError })
       return false
@@ -125,6 +118,10 @@ class LoginForm extends React.Component {
       </div>
     )
   }
+}
+
+LoginForm.propTypes = {
+  hostName: PropTypes.string.isRequired
 }
 
 export default LoginForm

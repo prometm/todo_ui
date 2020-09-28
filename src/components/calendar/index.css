@@ -35,12 +35,12 @@
 }
 
 .calendar .day.selected {
-    border: 2px solid dodgerblue;
+    color: #f2243a;
+    border: 2px solid #f2243a;
 }
 
 .calendar .day.today {
-    background-color: dodgerblue;
-    color: white;
+    color: dodgerblue;
 }
 
 .calendar .day.today:hover {
@@ -48,5 +48,5 @@
 }
 
 .calendar .day.today.selected {
-    border: 2px solid lightgray;
+    border: 2px solid #f2243a;
 }

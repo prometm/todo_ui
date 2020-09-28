@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import axios from 'axios'
+import PropTypes from 'prop-types'
 import TaskNameField from './TaskNameField.js'
-
 
 import '../css/fontawesome/all.min.css'
 
@@ -26,6 +26,7 @@ const styles = {
   navigation: {
     width: '25%',
     float: 'left',
+    marginTop: '6%'
   },
   row: {
     background: '#ffffff',
@@ -38,7 +39,8 @@ const styles = {
     height: 50,
   },
   upImage: {
-    marginTop: '3%',
+    marginTop: '5%',
+    height: '10px'
   },
   downImage: {
 
@@ -187,13 +189,17 @@ class Task extends React.Component {
             <input type="checkbox" onClick={this.taskChecked} className="checkbox" defaultChecked={this.props.task.done} name={this.props.task.name} />
           </th>
           <th style={styles.t, styles.t2}>
-            <TaskNameField className={className} name={this.state.taskName} changeTaskName={this.changeTaskName} readOnly={this.state.readOnlyName} />
+            <TaskNameField
+              className={className}
+              name={this.state.taskName}
+              changeTaskName={this.changeTaskName}
+              readOnly={this.state.readOnlyName} />
             
           </th>
           <th style={styles.t, styles.t3}>
             <div style={styles.navigation}>
-              <div style={styles.upImage} onClick={this.taskUp} name={this.props.task.id}><i className="fas fa-sort-up"></i></div>
-              <div className="downImage" onClick={this.taskDown} name={this.props.task.id}><i className="fas fa-sort-down"></i> </div>
+              <div style={styles.upImage} onClick={this.taskUp} name={this.props.task.id}><i style={{fontSize: '20px'}} className="fas fa-sort-up"></i></div>
+              <div onClick={this.taskDown} name={this.props.task.id}><i style={{fontSize: '20px'}} className="fas fa-sort-down"></i> </div>
             </div>
             <div style={styles.navigation}>
               <i className="fas fa-pencil-alt" onClick={this.handleEditName}></i>
@@ -202,7 +208,7 @@ class Task extends React.Component {
             <div style={styles.navigation}>
               <i style={ this.props.task.deadline ? {color: '#43d45f'} : {color: '#000000'}}
                 className="fas fa-calendar-alt"
-                onClick={() => this.props.handleShowCalendar(this.props.task.id)}></i>
+                onClick={() => this.props.handleShowCalendar(this.props.task.id, this.props.task.deadline)}></i>
             </div>
             
             <div style={styles.navigation} onClick={this.handleTaskDelete}>
@@ -213,6 +219,14 @@ class Task extends React.Component {
       </Fragment>
     )
   }
+}
+
+Task.propTypes = {
+  task: PropTypes.object.isRequired,
+  updatePage: PropTypes.func.isRequired,
+  hostName: PropTypes.string.isRequired,
+  projectId: PropTypes.number.isRequired,
+  handleShowCalendar: PropTypes.func.isRequired,
 }
 
 export default Task

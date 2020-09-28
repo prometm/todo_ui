@@ -1,7 +1,6 @@
 import React from 'react'
-// import ReactDOM from 'react-dom'
 import { Link } from 'react-router-dom'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import axios from 'axios'
 
 const styles = {
@@ -126,6 +125,10 @@ class RegisterForm extends React.Component {
       </div>
     )
   }
+}
+
+RegisterForm.propTypes = {
+  hostName: PropTypes.string.isRequired
 }
 
 export default RegisterForm
